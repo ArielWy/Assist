@@ -1,0 +1,14 @@
+name: Assist
+version: '1.0-SNAPSHOT'
+main: me.olios.plugins.assist.Assist
+api-version: '1.21'
+authors: [ olios ]
+commands:
+  assist:
+    description: Call for assist!
+    usage: /<command>
+permissions:
+  Assist.*:
+    default: op
+  Assist.notify:
+    default: op
