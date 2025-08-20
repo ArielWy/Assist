@@ -27,7 +27,7 @@ class AssistCommand : CommandExecutor, TabCompleter {
     ): MutableList<String>? {
         val subCommands = SubCommandManager.getAllCommands().filter { sender.hasPermission("Assist.$it") }
 
-        if (args == null || args.isEmpty()) return subCommands.toMutableList()
+        if (args.isEmpty()) return subCommands.toMutableList()
 
         val subCommand = SubCommandManager.getCommand(args[0])
         if (args.size == 1) {

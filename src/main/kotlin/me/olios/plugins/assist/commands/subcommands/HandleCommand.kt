@@ -3,6 +3,7 @@ package me.olios.plugins.assist.commands.subcommands
 import me.olios.plugins.assist.commands.interfaces.ParentSubCommand
 import me.olios.plugins.assist.commands.interfaces.SubCommand
 import me.olios.plugins.assist.commands.subcommands.handle.*
+import me.olios.plugins.assist.utils.ChatUtils
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -21,23 +22,27 @@ class HandleCommand : ParentSubCommand {
 
     override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
         if (sender !is Player) {
-            sender.sendMessage("§cOnly players can handle assist requests.")
+            ChatUtils.send(sender, "general.onlyPlayers")
             return true
         }
 
         if (!sender.hasPermission("assist.staff")) {
-            sender.sendMessage("§cYou do not have permission to handle assists.")
+            ChatUtils.send(sender, "general.noPermission")
             return true
         }
 
         if (args.isEmpty()) {
-            sender.sendMessage("§cUsage: /assist handle <${getSubCommandNames().joinToString("|")}> [args]")
+            ChatUtils.send(
+                sender,
+                "general.usageHandle",
+                mapOf("subcommands" to getSubCommandNames().joinToString("|"))
+            )
             return true
         }
 
         val sub = getSubCommand(args[0])
         if (sub == null) {
-            sender.sendMessage("§cUnknown subcommand: ${args[0]}")
+            ChatUtils.send(sender, "general.unknownSubcommand", mapOf("subcommand" to args[0]))
             return true
         }
 

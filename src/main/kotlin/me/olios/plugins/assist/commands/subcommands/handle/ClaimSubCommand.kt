@@ -4,6 +4,7 @@ import me.olios.plugins.assist.commands.interfaces.SubCommand
 import me.olios.plugins.assist.handlers.AssistHandler
 import me.olios.plugins.assist.handlers.AssistRequestManager
 import me.olios.plugins.assist.services.ClaimAction
+import me.olios.plugins.assist.utils.ChatUtils
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -13,7 +14,7 @@ class ClaimSubCommand: SubCommand {
         val player = sender as? Player ?: return false
 
         if (args.isEmpty()) {
-            sender.sendMessage("§cUsage: /assist handle claim <player>")
+            ChatUtils.send(sender, "handle.usageClaim")
             return true
         }
 
@@ -21,16 +22,25 @@ class ClaimSubCommand: SubCommand {
         val targetPlayer = Bukkit.getOnlinePlayers().find { it.name.equals(targetName, ignoreCase = true) }
 
         if (targetPlayer == null) {
-            sender.sendMessage("§cPlayer '$targetName' is not online.")
+            ChatUtils.send(
+                sender,
+                "handle.notOnline",
+                mapOf("PLAYER" to targetName)
+            )
             return true
         }
 
         val request = AssistRequestManager.getPendingRequests().find { it.requesterId == targetPlayer.uniqueId }
 
         if (request == null) {
-            sender.sendMessage("§cNo pending assist request from ${targetPlayer.name}.")
+            ChatUtils.send(
+                sender,
+                "handle.noPendingFrom",
+                mapOf("PLAYER" to targetPlayer.name)
+            )
             return true
         }
+
 
         ClaimAction.execute(request, sender)
         return true

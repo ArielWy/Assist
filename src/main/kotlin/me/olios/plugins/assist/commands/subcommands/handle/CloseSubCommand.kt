@@ -3,18 +3,19 @@ package me.olios.plugins.assist.commands.subcommands.handle
 import me.olios.plugins.assist.commands.interfaces.SubCommand
 import me.olios.plugins.assist.handlers.AssistRequestManager
 import me.olios.plugins.assist.services.CloseAction
+import me.olios.plugins.assist.utils.ChatUtils
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class CloseSubCommand : SubCommand {
     override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
         if (sender !is Player) {
-            sender.sendMessage("§cOnly staff players can use this command.")
+            ChatUtils.send(sender, "general.onlyStaff")
             return true
         }
 
         if (args.isEmpty()) {
-            sender.sendMessage("§cUsage: /assist close <description>")
+            ChatUtils.send(sender, "handle.usage", mapOf("COMMAND" to "close <description>"))
             return true
         }
 
@@ -23,16 +24,22 @@ class CloseSubCommand : SubCommand {
         // Find the active request this staff has claimed
         val request = AssistRequestManager.getClaimedRequest(sender.uniqueId)
         if (request == null) {
-            sender.sendMessage("§cYou have not claimed any active assistance request.")
+            ChatUtils.send(sender, "handle.noClaimed")
             return true
         }
 
         // Delegate to CloseAction
         CloseAction.closeRequest(request, sender.uniqueId, description)
-        sender.sendMessage("§aYou have closed the request from §e${request.requesterName}§a with description: §7$description")
+
+        ChatUtils.send(
+            sender,
+            "handle.closeSuccess",
+            mapOf("PLAYER" to request.requesterName, "DESCRIPTION" to description)
+        )
 
         return true
     }
+
 
     override fun tabComplete(sender: CommandSender, args: Array<out String>): List<String> {
         return if (args.isEmpty()) {

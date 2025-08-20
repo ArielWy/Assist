@@ -2,6 +2,7 @@ package me.olios.plugins.assist.notify
 
 import me.olios.plugins.assist.handlers.StaffManager
 import me.olios.plugins.assist.models.AssistRequest
+import me.olios.plugins.assist.utils.ChatUtils
 import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -24,63 +25,109 @@ object AssistNotifier {
                 continue
             }
 
-            val subtitle = if (pendingRequests.size == 1) {
-                "§e${pendingRequests[0].requesterName} needs assist"
+            if (pendingRequests.size == 1) {
+                ChatUtils.send(
+                    player,
+                    "request.notifyStaff",
+                    mapOf("PLAYER" to pendingRequests[0].requesterName)
+                )
             } else {
-                "§e${pendingRequests.size} players need assist"
+                ChatUtils.send(
+                    player,
+                    "request.notifyStaffMultiple",
+                    mapOf("COUNT" to pendingRequests.size.toString())
+                )
             }
-
-            player.sendActionBar(subtitle)
         }
     }
 
     fun notifyPlayerClaimed(playerId: UUID, staff: Player) {
         val player = Bukkit.getPlayer(playerId) ?: return
-        player.sendMessage("§aYour assistance request has been claimed by §e${staff.name}§a. Please wait while they assist you.")
+        ChatUtils.send(
+            player,
+            "request.claimedByStaff",
+            mapOf("STAFF" to staff.name)
+        )
     }
 
     fun notifyStaffClaimed(staff: Player, request: AssistRequest) {
-        staff.sendMessage("§aYou have successfully claimed the assistance request from §e${request.requesterName}§a.")
-        staff.sendMessage("§7Type §e/assist help§7 to see the available actions (msg, tp, close, etc).")
+        ChatUtils.send(
+            staff,
+            "handle.claimSuccess",
+            mapOf("PLAYER" to request.requesterName)
+        )
+        ChatUtils.send(staff, "handle.helpTip")
     }
 
     fun notifyPlayerClosed(playerId: UUID, staffId: UUID, description: String) {
-        val player = Bukkit.getPlayer(playerId)
+        val player = Bukkit.getPlayer(playerId) ?: return
         val staff = Bukkit.getPlayer(staffId)
 
-        player?.sendMessage("§aYour assistance request has been closed by §e${staff?.name ?: "Staff"}§a.")
-        player?.sendMessage("§7Reason: $description")
+        ChatUtils.send(
+            player,
+            "request.closedByStaff",
+            mapOf("STAFF" to (staff?.name ?: "Staff"))
+        )
+        ChatUtils.send(
+            player,
+            "request.closedReason",
+            mapOf("DESCRIPTION" to description)
+        )
     }
 
     fun notifyStaffClosed(staffId: UUID, request: AssistRequest, description: String) {
         val staff = Bukkit.getPlayer(staffId)
-        StaffManager.getStaffPlayers()
-            .forEach { it.sendMessage("§e${staff?.name ?: "A staff"} §7closed an assist request from §e${request.requesterName} §7with reason: §f$description") }
+        StaffManager.getStaffPlayers().forEach {
+            ChatUtils.send(
+                it,
+                "handle.closeSuccess",
+                mapOf(
+                    "PLAYER" to request.requesterName,
+                    "DESCRIPTION" to description
+                )
+            )
+        }
     }
 
     fun notifyPlayerMessage(player: Player, staff: Player, message: String) {
-        player.sendMessage("§6[Assist] §e${staff.name}: §f$message")
+        ChatUtils.send(
+            player,
+            "msg.playerToStaff",
+            mapOf("STAFF" to staff.name, "MESSAGE" to message)
+        )
     }
 
     fun notifyStaffMessage(staff: Player, player: Player, message: String) {
-        staff.sendMessage("§6[Assist → ${player.name}] §f$message")
+        ChatUtils.send(
+            staff,
+            "msg.staffToPlayer",
+            mapOf("PLAYER" to player.name, "MESSAGE" to message)
+        )
     }
-
 
     private fun playSound(player: Player) {
         player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f)
     }
 
     private fun sendChatMessage(player: Player, request: AssistRequest) {
-        player.sendMessage("§e[Assist] §f${request.requesterName} §7needs help: §b${request.message}")
-    }
-
-    private fun sendTitle(player: Player, request: AssistRequest) {
-        player.sendTitle(
-            "§eAssist Request!",
-            "§f${request.requesterName} needs help",
-            10, 40, 10
+        ChatUtils.send(
+            player,
+            "request.broadcast",
+            mapOf(
+                "PLAYER" to request.requesterName,
+                "MESSAGE" to request.message
+            )
         )
     }
 
+    private fun sendTitle(player: Player, request: AssistRequest) {
+        val title = ChatUtils.get(
+            "request.titleHeader"
+        )
+        val subtitle = ChatUtils.get(
+            "request.titleSub",
+            mapOf("PLAYER" to request.requesterName)
+        )
+        player.showTitle(net.kyori.adventure.title.Title.title(title, subtitle))
+    }
 }
