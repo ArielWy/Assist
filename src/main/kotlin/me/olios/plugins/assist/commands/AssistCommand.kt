@@ -1,33 +1,41 @@
 package me.olios.plugins.assist.commands
 
-import me.olios.plugins.assist.handlers.AssistHandler
-import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
+import org.bukkit.command.TabCompleter
 
-class AssistCommand : CommandExecutor {
-    override fun onCommand(
+
+class AssistCommand : CommandExecutor, TabCompleter {
+    override fun onCommand(sender: CommandSender, p1: Command, p2: String, args: Array<out String>): Boolean {
+        if (args.isEmpty()) return false
+
+        val subCommand = SubCommandManager.getCommand(args[0])
+        if (subCommand == null) {
+            sender.sendMessage("§cUnknown subcommand: ${args[0]}")
+            return true
+        }
+
+        return subCommand.execute(sender, args.sliceArray(1 until args.size))
+    }
+
+    override fun onTabComplete(
         sender: CommandSender,
-        command: Command,
-        label: String,
+        p1: Command,
+        p2: String,
         args: Array<out String>
-    ): Boolean {
-        if (sender !is Player) {
-            sender.sendMessage("§cOnly players can request assistance.")
-            return true
+    ): MutableList<String>? {
+        val subCommands = SubCommandManager.getAllCommands().filter { sender.hasPermission("Assist.$it") }
+
+        if (args == null || args.isEmpty()) return subCommands.toMutableList()
+
+        val subCommand = SubCommandManager.getCommand(args[0])
+        if (args.size == 1) {
+            return subCommands
+                .filter { it.startsWith(args[0], ignoreCase = true) }
+                .toMutableList()
         }
 
-        if (args.isEmpty()) {
-            sender.sendMessage("§cUsage: /assist <message>")
-            return true
-        }
-
-        val message = args.joinToString(" ")
-        AssistHandler.handleRequest(sender, message)
-
-        sender.sendMessage("§aYour assistance request has been sent to the staff.")
-        return true
+        return subCommand?.tabComplete(sender, args.sliceArray(1 until args.size))?.toMutableList()
     }
 }

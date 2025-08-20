@@ -1,0 +1,33 @@
+messages:
+  general:
+    onlyStaff: "<red>Only staff players can use this command."
+    onlyPlayers: "<red>Only players can use this command."
+    noPermission: "<red>You do not have permission to handle assists."
+    unknownSubcommand: "<red>Unknown subcommand: <gray>%COMMAND%</gray>"
+
+  request:
+    usage: "<red>Usage: /assist request <message>"
+    success: "<green>Your assistance request has been sent to the staff."
+    notifyStaff: "<yellow>%PLAYER% needs assist"
+    notifyStaffMultiple: "<yellow>%COUNT% players need assist"
+    claimedByStaff: "<green>Your assistance request has been claimed by <yellow>%STAFF%</yellow><green>. Please wait while they assist you."
+    closedByStaff: "<green>Your assistance request has been closed by <yellow>%STAFF%</yellow>."
+    closedReason: "<gray>Reason: %DESCRIPTION%"
+    titleHeader: "<yellow>Assist Request!"
+    titleSub: "<white>%PLAYER% needs help"
+    broadcast: "<yellow>[Assist] <white>%PLAYER% <gray>needs help: <aqua>%MESSAGE%"
+
+  handle:
+    usage: "<red>Usage: /assist handle <gold>[claim|msg|tp|close]</gold> [args]"
+    usageClaim: "<red>Usage: /assist handle claim <player>"
+    noPendingFrom: "<red>No pending assist request from <white>%PLAYER%</white>."
+    notOnline: "<red>Player '<white>%PLAYER%</white>' is not online."
+    noClaimed: "<red>You have not claimed any active assistance request."
+    claimSuccess: "<green>You have successfully claimed the assistance request from <yellow>%PLAYER%</yellow>."
+    closeSuccess: "<green>You have closed the request from <yellow>%PLAYER%</yellow><green> with description: <gray>%DESCRIPTION%</gray>"
+    helpTip: "<gray>Type <yellow>/assist help</yellow><gray> to see the available actions (msg, tp, close, etc)."
+
+  msg:
+    usage: "<red>Usage: /assist msg <message>"
+    staffToPlayer: "<gold>[Assist → %PLAYER%]</gold> <white>%MESSAGE%"
+    playerToStaff: "<gold>[Assist]</gold> <yellow>%STAFF%:</yellow> <white>%MESSAGE%"

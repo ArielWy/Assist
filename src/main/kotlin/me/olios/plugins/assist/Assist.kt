@@ -1,6 +1,9 @@
 package me.olios.plugins.assist
 
 import me.olios.plugins.assist.commands.AssistCommand
+import me.olios.plugins.assist.commands.SubCommandManager
+import me.olios.plugins.assist.commands.subcommands.HandleCommand
+import me.olios.plugins.assist.commands.subcommands.RequestCommand
 import me.olios.plugins.assist.handlers.AssistHandler
 import me.olios.plugins.assist.handlers.AssistRequestManager
 import me.olios.plugins.assist.handlers.StaffManager
@@ -23,6 +26,9 @@ class Assist : JavaPlugin() {
         // start the persistent AssistStatusTask
         AssistStatusTask.start(this) { AssistRequestManager.getPendingRequests() }
 
+        // init StaffManager
+        StaffManager.init()
+
         // register commands and listeners
         registerCommands()
         registerListeners()
@@ -30,6 +36,9 @@ class Assist : JavaPlugin() {
 
     private fun registerCommands() {
         getCommand("assist")?.setExecutor(AssistCommand())
+
+        SubCommandManager.registerCommand("request", RequestCommand())
+        SubCommandManager.registerCommand("handle", HandleCommand())
     }
 
     private fun registerListeners() {

@@ -1,0 +1,45 @@
+package me.olios.plugins.assist.utils
+
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.MiniMessage
+import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
+import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.entity.Player
+import java.io.File
+object ChatUtils {
+    private lateinit var messages: YamlConfiguration
+    private val mm = MiniMessage.miniMessage()
+
+    fun init(dataFolder: File) {
+        val file = File(dataFolder, "messages.yml")
+        if (!file.exists()) {
+            dataFolder.mkdirs()
+            file.writeText(ChatUtils::class.java.getResource("/messages.yml")!!.readText())
+        }
+        messages = YamlConfiguration.loadConfiguration(file)
+    }
+
+    fun get(path: String, placeholders: Map<String, String> = emptyMap()): Component {
+        val raw = messages.getString(path) ?: "<red>Missing message: $path"
+        val replaced = applyPlaceholders(raw, placeholders)
+        return mm.deserialize(replaced)
+    }
+
+    fun send(sender: CommandSender, path: String, placeholders: Map<String, String> = emptyMap()) {
+        sender.sendMessage(get(path, placeholders))
+    }
+
+    fun broadcast(path: String, placeholders: Map<String, String> = emptyMap()) {
+        val msg = get(path, placeholders)
+        Bukkit.getOnlinePlayers().forEach { it.sendMessage(msg) }
+    }
+
+    private fun applyPlaceholders(msg: String, placeholders: Map<String, String>): String {
+        var result = msg
+        placeholders.forEach { (key, value) ->
+            result = result.replace("%$key%", value)
+        }
+        return result
+    }
+}
