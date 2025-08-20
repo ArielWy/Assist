@@ -5,10 +5,60 @@ api-version: '1.21'
 authors: [ olios ]
 commands:
   assist:
-    description: Call for assist!
-    usage: /<command>
+    description: Call for an assist!
+    usage: /<command> <description>
+
 permissions:
-  Assist.*:
+  # ----------------------
+  # Player Permissions
+  # ----------------------
+  assist.request:
+    description: Allows a player to send an assist request
+    default: true
+
+  # ----------------------
+  # Staff Permissions (Handle)
+  # ----------------------
+  assist.handle:
+    description: Allows staff to handle assist requests (parent permission)
     default: op
-  Assist.notify:
+    children:
+      assist.handle.claim: true
+      assist.handle.close: true
+      assist.handle.msg: true
+      assist.handle.tp: true
+
+  assist.handle.claim:
+    description: Allows staff to claim an assist request
     default: op
+
+  assist.handle.close:
+    description: Allows staff to close a claimed assist request
+    default: op
+
+  assist.handle.msg:
+    description: Allows staff to send a direct message to the assisted player
+    default: op
+
+  assist.handle.tp:
+    description: Allows staff to teleport to the assisted player
+    default: op
+
+  # ----------------------
+  # Toggle Permissions
+  # ----------------------
+  assist.toggle:
+    description: Allows staff to toggle receiving assist notifications
+    default: op
+
+  assist.toggle.prominent:
+    description: Admin permission for advanced toggle options
+    default: op
+
+  # ----------------------
+  # Notify Permissions
+  # ----------------------
+  assist.notify:
+    description: Allows receiving assist notifications
+    default: op
+

@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.UUID
 
-class MsgSubCommand: SubCommand {
+class MsgSubCommand(override val permission: String) : SubCommand {
     override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
         if (sender !is Player) {
             ChatUtils.send(sender, "general.onlyStaff")

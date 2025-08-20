@@ -9,7 +9,7 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class ClaimSubCommand: SubCommand {
+class ClaimSubCommand(override val permission: String) : SubCommand {
     override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
         val player = sender as? Player ?: return false
 

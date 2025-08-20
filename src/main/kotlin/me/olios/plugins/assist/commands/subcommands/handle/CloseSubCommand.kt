@@ -7,7 +7,7 @@ import me.olios.plugins.assist.utils.ChatUtils
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class CloseSubCommand : SubCommand {
+class CloseSubCommand(override val permission: String) : SubCommand {
     override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
         if (sender !is Player) {
             ChatUtils.send(sender, "general.onlyStaff")

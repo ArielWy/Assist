@@ -37,8 +37,8 @@ class Assist : JavaPlugin() {
     private fun registerCommands() {
         getCommand("assist")?.setExecutor(AssistCommand())
 
-        SubCommandManager.registerCommand("request", RequestCommand())
-        SubCommandManager.registerCommand("handle", HandleCommand())
+        SubCommandManager.registerCommand("request", RequestCommand("assist.request"))
+        SubCommandManager.registerCommand("handle", HandleCommand("assist.handle"))
     }
 
     private fun registerListeners() {

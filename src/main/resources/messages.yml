@@ -2,7 +2,7 @@ messages:
   general:
     onlyStaff: "<red>Only staff players can use this command."
     onlyPlayers: "<red>Only players can use this command."
-    noPermission: "<red>You do not have permission to handle assists."
+    noPermission: "<red>You do not have permission to do that!"
     unknownSubcommand: "<red>Unknown subcommand: <gray>%COMMAND%</gray>"
 
   request:

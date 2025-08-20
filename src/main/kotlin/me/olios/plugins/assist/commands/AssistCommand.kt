@@ -1,5 +1,6 @@
 package me.olios.plugins.assist.commands
 
+import me.olios.plugins.assist.utils.ChatUtils
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -12,7 +13,7 @@ class AssistCommand : CommandExecutor, TabCompleter {
 
         val subCommand = SubCommandManager.getCommand(args[0])
         if (subCommand == null) {
-            sender.sendMessage("§cUnknown subcommand: ${args[0]}")
+            ChatUtils.send(sender, "general.unknownSubcommand", mapOf("subcommand" to args[0]))
             return true
         }
 
@@ -25,7 +26,7 @@ class AssistCommand : CommandExecutor, TabCompleter {
         p2: String,
         args: Array<out String>
     ): MutableList<String>? {
-        val subCommands = SubCommandManager.getAllCommands().filter { sender.hasPermission("Assist.$it") }
+        val subCommands = SubCommandManager.getAllCommands().filter { sender.hasPermission("Assist.${it.lowercase()}") }
 
         if (args.isEmpty()) return subCommands.toMutableList()
 

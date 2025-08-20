@@ -7,14 +7,14 @@ import me.olios.plugins.assist.utils.ChatUtils
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class HandleCommand : ParentSubCommand {
+class HandleCommand(override val permission: String) : ParentSubCommand {
 
     private val subCommands: MutableMap<String, SubCommand> = mutableMapOf()
 
     init {
-        subCommands["claim"] = ClaimSubCommand()
-        subCommands["close"] = CloseSubCommand()
-        subCommands["msg"] = MsgSubCommand()
+        subCommands["claim"] = ClaimSubCommand("assist.handle.claim")
+        subCommands["close"] = CloseSubCommand( "assist.handle.close")
+        subCommands["msg"] = MsgSubCommand("assist.handle.msg")
     }
 
     override fun getSubCommand(name: String): SubCommand? = subCommands[name.lowercase()]
@@ -26,17 +26,8 @@ class HandleCommand : ParentSubCommand {
             return true
         }
 
-        if (!sender.hasPermission("assist.staff")) {
-            ChatUtils.send(sender, "general.noPermission")
-            return true
-        }
-
         if (args.isEmpty()) {
-            ChatUtils.send(
-                sender,
-                "general.usageHandle",
-                mapOf("subcommands" to getSubCommandNames().joinToString("|"))
-            )
+            ChatUtils.send(sender, "general.usageHandle", mapOf("subcommands" to getSubCommandNames().joinToString("|")))
             return true
         }
 
@@ -46,16 +37,22 @@ class HandleCommand : ParentSubCommand {
             return true
         }
 
+        if (!sender.hasPermission(sub.permission)) {
+            ChatUtils.send(sender, "general.noPermission")
+            return true
+        }
+
         return sub.execute(sender, args.sliceArray(1 until args.size))
     }
 
     override fun tabComplete(sender: CommandSender, args: Array<out String>): List<String> {
-        if (args.isEmpty()) return getSubCommandNames().toList()
+        val availableSubCommands = getSubCommandNames()
+            .filter { sender.hasPermission("assist.handle.${it.lowercase()}") }
 
-        val sub = getSubCommand(args[0])
         return if (args.size == 1) {
-            getSubCommandNames().filter { it.startsWith(args[0], ignoreCase = true) }
+            availableSubCommands.filter { it.startsWith(args[0], ignoreCase = true) }
         } else {
+            val sub = getSubCommand(args[0])
             sub?.tabComplete(sender, args.sliceArray(1 until args.size)) ?: emptyList()
         }
     }
