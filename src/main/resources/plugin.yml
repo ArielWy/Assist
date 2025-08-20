@@ -62,3 +62,23 @@ permissions:
     description: Allows receiving assist notifications
     default: op
 
+  # ----------------------
+  # Reload Permissions
+  # ----------------------
+  assist.reload:
+    description: Allows reloading the Assist plugin
+    default: op
+
+  # ----------------------
+  # Master Permission
+  # ----------------------
+  assist.*:
+    description: Grants access to all Assist plugin permissions
+    default: op
+    children:
+      assist.request: true
+      assist.handle: true
+      assist.toggle: true
+      assist.toggle.permanent: true
+      assist.notify: true
+      assist.reload: true

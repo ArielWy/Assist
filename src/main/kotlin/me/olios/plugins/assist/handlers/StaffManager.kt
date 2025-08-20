@@ -35,14 +35,7 @@ object StaffManager : Listener {
         staffPlayers.remove(event.player)
     }
 
-    fun refreshPermissions() {
-        staffPlayers.clear()
-        for (player in Bukkit.getOnlinePlayers()) {
-            if (checkPerm(player)) staffPlayers.add(player)
-        }
-    }
-
-    fun checkPerm(player: Player): Boolean {
+    private fun checkPerm(player: Player): Boolean {
         if (!player.hasPermission("assist.notify") || ConfigHandler.isPermanentlyDisabled(player.name)) {
             staffPlayers.remove(player)
             return false

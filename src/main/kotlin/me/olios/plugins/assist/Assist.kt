@@ -45,6 +45,7 @@ class Assist : JavaPlugin() {
         SubCommandManager.registerCommand("request", RequestCommand("assist.request"))
         SubCommandManager.registerCommand("handle", HandleCommand("assist.handle"))
         SubCommandManager.registerCommand("toggle", ToggleCommand("assist.toggle"))
+        SubCommandManager.registerCommand("reload", ToggleCommand("assist.reload"))
     }
 
     private fun registerListeners() {

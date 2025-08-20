@@ -4,6 +4,7 @@ messages:
     onlyPlayers: "<red>Only players can use this command."
     noPermission: "<red>You do not have permission to do that!"
     unknownSubcommand: "<red>Unknown subcommand: <gray>%SUBCOMMAND%</gray>"
+    reloadSuccess: "<green>Assist plugin reloaded successfully."
 
   request:
     usage: "<red>Usage: /assist request <message>"
