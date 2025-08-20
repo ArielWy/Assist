@@ -1,6 +1,8 @@
 package me.olios.plugins.assist.handlers
 
+import me.olios.plugins.assist.utils.ConfigHandler
 import org.bukkit.Bukkit
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -11,9 +13,9 @@ object StaffManager : Listener {
     private val staffPlayers = mutableSetOf<Player>()
 
     fun init() {
-        // On plugin enable, preload staff list
+        staffPlayers.clear()
         for (player in Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission("assist.notify")) {
+            if (checkPerm(player)) {
                 staffPlayers.add(player)
             }
         }
@@ -23,35 +25,38 @@ object StaffManager : Listener {
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
-        val player = event.player
-        if (player.hasPermission("assist.notify")) {
-            staffPlayers.add(player)
+        if (checkPerm(event.player)) {
+            staffPlayers.add(event.player)
         }
-        Bukkit.getLogger().info(staffPlayers.joinToString(", "))
     }
 
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
         staffPlayers.remove(event.player)
-
-        Bukkit.getLogger().info(staffPlayers.joinToString(", "))
     }
 
     fun refreshPermissions() {
-        // Call this if you ever suspect permission changes mid-session
         staffPlayers.clear()
         for (player in Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission("assist.notify")) {
-                staffPlayers.add(player)
-            }
+            if (checkPerm(player)) staffPlayers.add(player)
         }
     }
 
     fun checkPerm(player: Player): Boolean {
-        if (!player.hasPermission("assist.notify")) {
+        if (!player.hasPermission("assist.notify") || ConfigHandler.isPermanentlyDisabled(player.name)) {
             staffPlayers.remove(player)
             return false
         }
         return true
+    }
+
+    fun addTemporary(player: Player) {
+        if (player.hasPermission("assist.notify") && !ConfigHandler.isPermanentlyDisabled(player.name)) {
+            staffPlayers.add(player)
+        }
+    }
+
+    fun removeTemporary(player: Player) {
+        staffPlayers.remove(player)
     }
 }

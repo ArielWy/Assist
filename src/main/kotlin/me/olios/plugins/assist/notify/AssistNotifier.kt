@@ -3,6 +3,7 @@ package me.olios.plugins.assist.notify
 import me.olios.plugins.assist.handlers.StaffManager
 import me.olios.plugins.assist.models.AssistRequest
 import me.olios.plugins.assist.utils.ChatUtils
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -24,20 +25,19 @@ object AssistNotifier {
                 player.sendActionBar("") // Clear the ActionBar
                 continue
             }
-
-            if (pendingRequests.size == 1) {
-                ChatUtils.send(
-                    player,
+            val msg: Component = if (pendingRequests.size == 1) {
+                ChatUtils.get(
                     "request.notifyStaff",
                     mapOf("PLAYER" to pendingRequests[0].requesterName)
                 )
             } else {
-                ChatUtils.send(
-                    player,
+                ChatUtils.get(
                     "request.notifyStaffMultiple",
                     mapOf("COUNT" to pendingRequests.size.toString())
                 )
             }
+
+            player.sendActionBar(msg)
         }
     }
 

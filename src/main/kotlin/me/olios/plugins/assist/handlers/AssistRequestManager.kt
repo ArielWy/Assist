@@ -1,25 +1,26 @@
 package me.olios.plugins.assist.handlers
 
-import com.sun.net.httpserver.Request
 import me.olios.plugins.assist.models.AssistRequest
 import java.util.UUID
 
 object AssistRequestManager {
-    private val pendingRequests = mutableListOf<AssistRequest>()
+    private val allRequests = mutableListOf<AssistRequest>()
 
     fun addRequest(request: AssistRequest) {
-        pendingRequests.add(request)
+        allRequests.add(request)
     }
 
     fun removeRequest(request: AssistRequest) {
-        pendingRequests.remove(request)
+        allRequests.remove(request)
     }
 
-    fun getPendingRequests(): List<AssistRequest> = pendingRequests.toList()
+    fun getAllRequests(): List<AssistRequest> = allRequests
 
-    fun count(): Int = pendingRequests.size
+    fun getPendingRequests(): List<AssistRequest> = allRequests.filter { it.handlerId == null }
 
-    fun getClaimedRequest(uuid: UUID): AssistRequest? {
-        return pendingRequests.find { it.handlerId == uuid }
-    }
+    fun getClaimedRequests(): List<AssistRequest> = allRequests.filter { it.handlerId != null }
+
+    fun count(): Int = allRequests.size
+
+    fun getClaimedRequest(uuid: UUID): AssistRequest? = allRequests.find { it.handlerId == uuid }
 }

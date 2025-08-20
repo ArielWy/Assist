@@ -14,14 +14,16 @@ class RequestCommand(override val permission: String) : SubCommand {
         }
 
         if (args.isEmpty()) {
-            ChatUtils.send(sender, "general.usageRequest")
+            ChatUtils.send(
+                sender,
+                "request.usage")
             return true
         }
 
         val message = args.joinToString(" ")
         AssistHandler.handleRequest(sender, message)
 
-        ChatUtils.send(sender, "request.sent")
+        ChatUtils.send(sender, "request.success")
         return true
     }
 

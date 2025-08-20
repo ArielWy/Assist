@@ -1,5 +1,6 @@
 package me.olios.plugins.assist.utils
 
+import me.olios.plugins.assist.Assist
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
@@ -11,17 +12,18 @@ object ChatUtils {
     private lateinit var messages: YamlConfiguration
     private val mm = MiniMessage.miniMessage()
 
-    fun init(dataFolder: File) {
+    fun init(plugin: Assist) {
+        val dataFolder = plugin.dataFolder
         val file = File(dataFolder, "messages.yml")
         if (!file.exists()) {
-            dataFolder.mkdirs()
-            file.writeText(ChatUtils::class.java.getResource("/messages.yml")!!.readText())
+            plugin.saveResource("messages.yml", false)
         }
         messages = YamlConfiguration.loadConfiguration(file)
     }
 
     fun get(path: String, placeholders: Map<String, String> = emptyMap()): Component {
-        val raw = messages.getString(path) ?: "<red>Missing message: $path"
+        val messagePath = "messages.$path"
+        val raw = messages.getString(messagePath) ?: "<red>Missing message: $messagePath"
         val replaced = applyPlaceholders(raw, placeholders)
         return mm.deserialize(replaced)
     }

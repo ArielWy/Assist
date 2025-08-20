@@ -13,8 +13,9 @@ class HandleCommand(override val permission: String) : ParentSubCommand {
 
     init {
         subCommands["claim"] = ClaimSubCommand("assist.handle.claim")
-        subCommands["close"] = CloseSubCommand( "assist.handle.close")
-        subCommands["msg"] = MsgSubCommand("assist.handle.msg")
+        subCommands["close"] = CloseSubCommand("assist.handle.close")
+        subCommands["msg"]   = MsgSubCommand("assist.handle.msg")
+        // subCommands["tp"] = TpSubCommand("assist.handle.tp")
     }
 
     override fun getSubCommand(name: String): SubCommand? = subCommands[name.lowercase()]
@@ -27,13 +28,21 @@ class HandleCommand(override val permission: String) : ParentSubCommand {
         }
 
         if (args.isEmpty()) {
-            ChatUtils.send(sender, "general.usageHandle", mapOf("subcommands" to getSubCommandNames().joinToString("|")))
+            ChatUtils.send(
+                sender,
+                "handle.usage",
+                mapOf("SUBCOMMANDS" to getSubCommandNames().joinToString("|"))
+            )
             return true
         }
 
         val sub = getSubCommand(args[0])
         if (sub == null) {
-            ChatUtils.send(sender, "general.unknownSubcommand", mapOf("subcommand" to args[0]))
+            ChatUtils.send(
+                sender,
+                "general.unknownSubcommand",
+                mapOf("SUBCOMMAND" to args[0])
+            )
             return true
         }
 

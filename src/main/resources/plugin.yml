@@ -6,7 +6,7 @@ authors: [ olios ]
 commands:
   assist:
     description: Call for an assist!
-    usage: /<command> <description>
+    usage: /<command> request <description>
 
 permissions:
   # ----------------------
@@ -51,7 +51,7 @@ permissions:
     description: Allows staff to toggle receiving assist notifications
     default: op
 
-  assist.toggle.prominent:
+  assist.toggle.permanent:
     description: Admin permission for advanced toggle options
     default: op
 

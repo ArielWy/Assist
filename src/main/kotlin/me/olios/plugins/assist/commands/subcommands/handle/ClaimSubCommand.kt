@@ -47,8 +47,8 @@ class ClaimSubCommand(override val permission: String) : SubCommand {
     }
 
     override fun tabComplete(sender: CommandSender, args: Array<out String>): List<String> {
-        return Bukkit.getOnlinePlayers()
-            .map { it.name }
+        return AssistRequestManager.getPendingRequests()
+            .map { it.requesterName }
             .filter { it.startsWith(args.getOrNull(0) ?: "", ignoreCase = true) }
     }
 }

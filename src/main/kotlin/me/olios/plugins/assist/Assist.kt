@@ -4,10 +4,13 @@ import me.olios.plugins.assist.commands.AssistCommand
 import me.olios.plugins.assist.commands.SubCommandManager
 import me.olios.plugins.assist.commands.subcommands.HandleCommand
 import me.olios.plugins.assist.commands.subcommands.RequestCommand
+import me.olios.plugins.assist.commands.subcommands.ToggleCommand
 import me.olios.plugins.assist.handlers.AssistHandler
 import me.olios.plugins.assist.handlers.AssistRequestManager
 import me.olios.plugins.assist.handlers.StaffManager
 import me.olios.plugins.assist.notify.AssistStatusTask
+import me.olios.plugins.assist.utils.ChatUtils
+import me.olios.plugins.assist.utils.ConfigHandler
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -23,11 +26,13 @@ class Assist : JavaPlugin() {
         //define plugin instance
         instance = this
 
+        // init objects
+        ConfigHandler.init(this) // load config
+        ChatUtils.init(this) // load message.yml
+        StaffManager.init() // load staff member in the server
+
         // start the persistent AssistStatusTask
         AssistStatusTask.start(this) { AssistRequestManager.getPendingRequests() }
-
-        // init StaffManager
-        StaffManager.init()
 
         // register commands and listeners
         registerCommands()
@@ -39,6 +44,7 @@ class Assist : JavaPlugin() {
 
         SubCommandManager.registerCommand("request", RequestCommand("assist.request"))
         SubCommandManager.registerCommand("handle", HandleCommand("assist.handle"))
+        SubCommandManager.registerCommand("toggle", ToggleCommand("assist.toggle"))
     }
 
     private fun registerListeners() {
