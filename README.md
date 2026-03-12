@@ -1,6 +1,6 @@
-# Assist Plugin
+# Assist
 
-A powerful Minecraft server plugin that provides a structured support and assistance request system. Players can request help from staff members, and staff can efficiently manage and respond to assistance requests.
+Assist is a lightweight Minecraft support ticket plugin that allows players to request help from staff using a simple command system. Staff can claim requests, communicate with players, teleport to them, and close tickets when resolved.
 
 ## Features
 
@@ -9,7 +9,6 @@ A powerful Minecraft server plugin that provides a structured support and assist
 - **Real-time Notifications**: Get notified when staff claim or respond to requests
 - **Direct Messaging**: Communicate directly with assigned staff members
 - **Request Tracking**: Track the status of your assistance request in real-time
-- **Multiple Requests**: Handle multiple concurrent assistance requests
 
 ### 👥 Staff Features
 - **Manage Requests**: Claim and close assistance requests efficiently
@@ -160,14 +159,14 @@ Display available assistance commands and their usage.
 ## Installation
 
 ### Requirements
-- **Minecraft Server**: 1.21.x or higher (Paper/Spigot compatible)
+- **Minecraft Server**: 1.21+ (Paper compatible)
 - **Java**: Version 21 or higher
 
 ### Steps
 
 1. **Download** the latest `Assist.jar` release
 2. **Place** the JAR file in your server's `plugins/` directory
-3. **Restart** your server or use a plugin reloader command
+3. **Restart** your server
 4. **Configure** the plugin using the generated config files in `plugins/Assist/`
 5. **Set Permissions** for your staff members
 
@@ -187,13 +186,9 @@ toggle:
 
 ---
 
-### `plugin.yml`
-Plugin metadata and command registration (auto-generated).
-
----
-
 ### `messages.yml`
-Customizable message strings with MiniMessage color support.
+Customizable message strings with MiniMessage support.
+Easily craft messages using the [Adventure Web UI](https://webui.advntr.dev/)
 
 ```yaml
 messages:
@@ -229,24 +224,6 @@ messages:
     permanentlyEnabled: "<green>Assist notifications permanently enabled.</green>"
     permanentlyDisabled: "<red>Assist notifications permanently disabled.</red>"
 ```
-
-## Color Codes
-
-The plugin supports **MiniMessage** color formatting. Common color codes include:
-
-| Code | Color |
-|------|-------|
-| `<red>` | Red |
-| `<green>` | Green |
-| `<yellow>` | Yellow |
-| `<blue>` | Blue |
-| `<aqua>` | Aqua/Cyan |
-| `<gold>` | Gold |
-| `<gray>` | Gray |
-| `<white>` | White |
-| `<dark_red>` | Dark Red |
-| `<dark_green>` | Dark Green |
-| `<dark_blue>` | Dark Blue |
 
 ## Usage Examples
 
@@ -289,8 +266,8 @@ Server: Assist notifications temporarily disabled.
 Staff: /assist toggle
 Server: Assist notifications temporarily enabled.
 
-Admin: /assist toggle permanent off PlayerName
-Server: Assist notifications permanently disabled for PlayerName.
+Admin: /assist toggle permanent off
+Server: Assist notifications permanently disabled.
 ```
 
 ## Troubleshooting
